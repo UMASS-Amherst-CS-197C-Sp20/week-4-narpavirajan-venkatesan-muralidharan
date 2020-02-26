@@ -25,19 +25,46 @@ POINTER alloc(VALUE value) {
 // How do you count the items in a linked list?
 int list_size(POINTER start) {
   // TODO, does nothing right now.
-  return -1;
+  int counter=0;
+  for(POINTER x = start; x != NULL; x = x->next) {
+    counter++;
+  }
+  return counter;
 }
 
 // How do you add an item to the end of a linked list?
 void push_back(POINTER start, VALUE value) {
   // TODO, does nothing right now.
+  POINTER new = alloc(value);
+                 new->next = NULL;
+                if (start == NULL){
+                    start=new;
+                }
+                else{
+                    POINTER temp = start;
+                    while(temp->next != NULL){
+                        temp = temp->next;
+                    }
+                    temp->next = new; 
+                    
+                }      
   return;
 }
 
 bool list_equals_array(POINTER list, double* array, int array_len) {
   if (list_size(list) != array_len) return false;
+  int i=0;
+  POINTER x=list;
+  while(x!=NULL){
+    if(array[i]!=(double)x->value){
+      printf("The list and the array are not equal!");
+      return false;
+    }
+    i++;
+    x=x->next;
+  }
   // TODO, do this better!
-  return false;
+  return true;
 }
 
 // Given a value and a list, alloc a new entry and put it on the front of this list.
@@ -54,6 +81,29 @@ POINTER push_front(VALUE value, POINTER list) {
 // the list becomes: 1->2->4->5
 bool remove_value(POINTER start, VALUE value){
   //TODO
+  POINTER prev = start; // empty header
+  POINTER current = start->next; // the first valid node
+    while(current != NULL) {
+        if(current->value == value) {
+           prev->next = current->next; // unlink the node you remove
+        // delete current; // delete the node
+        printf("Value Deleted");
+            return true; 
+        }
+        else {
+            // printf( "Value % << " does not match " << remValue << ".\n";
+            prev = current; 
+            current = current->next; // go to next value
+        }
+    }
+    if(current == NULL) { // if we reached end of list or the list is empty
+        printf("Can't remove value: no match found.\n"); 
+    } 
+        // // cout << "Deleting: " << current << "\n";
+        // prev->next = current->next; // unlink the node you remove
+        // // delete current; // delete the node
+        // printf("Value Deleted");
+    
   return false;
 }
 
@@ -62,7 +112,22 @@ bool remove_value(POINTER start, VALUE value){
 // the list becomes: 5->4->3->2->1
 POINTER reverse_list(POINTER start){
   //TODO
-  return NULL;
+  POINTER current = start; 
+        POINTER prev = NULL, next = NULL; 
+  
+        while (current != NULL) { 
+            // Store next 
+            next = current->next; 
+  
+            // Reverse current node's pointer 
+            current->next = prev; 
+  
+            // Move pointers one position ahead. 
+            prev = current; 
+            current = next; 
+        } 
+        start = prev; 
+  return start;
 }
 
 // Given a list, take its first element off and put it in the free list.
